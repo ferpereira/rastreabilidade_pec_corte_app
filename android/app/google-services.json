@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "760414710150",
+    "firebase_url": "https://ambient-catcher-132219.firebaseio.com",
+    "project_id": "ambient-catcher-132219",
+    "storage_bucket": "ambient-catcher-132219.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760414710150:android:4aa1f712f80218af18a407",
+        "android_client_info": {
+          "package_name": "com.rastreabilidadepecuariacorte.rastreabilidade_pec_corte_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "760414710150-9qti702css857k5dcv02lhok54cu7l6i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8LS_00EMS9K49AMpJtqP7BVzfm5Nflgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "760414710150-9qti702css857k5dcv02lhok54cu7l6i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "760414710150-3hch0pr2qq9m92fpaf8n48kvvu7vs3rf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.palmfood",
+                "app_store_id": "030117"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
