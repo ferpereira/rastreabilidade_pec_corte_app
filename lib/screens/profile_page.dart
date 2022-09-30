@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/home.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/login_page.dart';
 import 'package:rastreabilidade_pec_corte_app/utils/fire_auth.dart';
+import 'package:rastreabilidade_pec_corte_app/widgets/add_animal_form.dart';
+
+import '../db/database.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -35,36 +39,22 @@ class _ProfilePageState extends State<ProfilePage> {
           'Dashboard',
           style: TextStyle(color: Color(0xffffffff)),
         ),
+        actions: <Widget>[
+          if (_currentUser != null)
+            Text(
+              'User:${_currentUser.displayName}',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'NAME: ${_currentUser.displayName}',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            SizedBox(height: 16.0),
-            Text(
               'EMAIL: ${_currentUser.email}',
               style: Theme.of(context).textTheme.bodyText1,
             ),
-            SizedBox(height: 16.0),
-            // _currentUser.emailVerified
-            //     ? Text(
-            //         'Email verified',
-            //         style: Theme.of(context)
-            //             .textTheme
-            //             .bodyText1!
-            //             .copyWith(color: Colors.green),
-            //       )
-            //     : Text(
-            //         'Email not verified',
-            //         style: Theme.of(context)
-            //             .textTheme
-            //             .bodyText1!
-            //             .copyWith(color: Colors.red),
-            //       ),
             SizedBox(height: 16.0),
             _isSendingVerification
                 ? CircularProgressIndicator()
@@ -82,6 +72,16 @@ class _ProfilePageState extends State<ProfilePage> {
                           });
                         },
                         child: Text('Verify email'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => AddAnimalForm(),
+                            ),
+                          );
+                        },
+                        child: Text('Registros'),
                       ),
                       SizedBox(width: 8.0),
                       IconButton(
@@ -124,6 +124,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
+            MaterialButton(
+              onPressed: () async {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => Home(user: _currentUser),
+                  ),
+                );
+              },
+              child: const Text('Lista registro'),
+              color: Colors.blue,
+              textColor: Colors.white,
+              minWidth: 300,
+              height: 40,
+            ),
           ],
         ),
       ),
