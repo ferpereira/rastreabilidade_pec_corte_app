@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rastreabilidade_pec_corte_app/db/database.dart';
@@ -15,7 +16,7 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   bool isSelectionMode = false;
   late int listLength = 0;
-  late List<Animal> _selected;
+  late List<Animal> _selected = [];
   bool _selectAll = false;
   bool _isGridMode = false;
   late User _currentUser;
@@ -25,12 +26,10 @@ class HomeState extends State<Home> {
     _currentUser = widget.user;
     super.initState();
     initializeSelection();
-    _asyncMethod();
   }
 
   _asyncMethod() async {
     Future<List<Animal>> db = Database.readItems();
-
     List<Animal> listAnimal = [];
     db.then((value) => (listAnimal.addAll(value)));
     listLength = listAnimal.length;
@@ -48,6 +47,7 @@ class HomeState extends State<Home> {
     super.dispose();
   }
 
+  final db = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,24 +64,24 @@ class HomeState extends State<Home> {
             style: TextStyle(color: Color(0xffffffff)),
           ),
           actions: <Widget>[
-            if (_isGridMode)
-              IconButton(
-                icon: const Icon(Icons.grid_on, color: Colors.white),
-                onPressed: () {
-                  setState(() {
-                    _isGridMode = false;
-                  });
-                },
-              )
-            else
-              IconButton(
-                icon: const Icon(Icons.list, color: Colors.white),
-                onPressed: () {
-                  setState(() {
-                    _isGridMode = true;
-                  });
-                },
-              ),
+            // if (_isGridMode)
+            //   IconButton(
+            //     icon: const Icon(Icons.grid_on, color: Colors.white),
+            //     onPressed: () {
+            //       setState(() {
+            //         _isGridMode = false;
+            //       });
+            //     },
+            //   )
+            // else
+            // IconButton(
+            //   icon: const Icon(Icons.list, color: Colors.white),
+            //   onPressed: () {
+            //     setState(() {
+            //       _isGridMode = true;
+            //     });
+            //   },
+            // ),
             if (isSelectionMode)
               TextButton(
                   child: !_selectAll
@@ -117,82 +117,82 @@ class HomeState extends State<Home> {
               ),
           ],
         ),
-        body: _isGridMode
-            ? GridBuilder(
-                isSelectionMode: isSelectionMode,
-                selectedList: _selected,
-                onSelectionChange: (bool x) {
-                  setState(() {
-                    isSelectionMode = x;
-                  });
-                },
-              )
-            : ListBuilder(
-                isSelectionMode: isSelectionMode,
-                selectedList: _selected,
-                onSelectionChange: (bool x) {
-                  setState(() {
-                    isSelectionMode = x;
-                  });
-                },
-              ));
-  }
-}
-
-class GridBuilder extends StatefulWidget {
-  const GridBuilder({
-    required this.selectedList,
-    required this.isSelectionMode,
-    required this.onSelectionChange,
-  });
-
-  final bool isSelectionMode;
-  final Function(bool)? onSelectionChange;
-  final List<Animal> selectedList;
-
-  @override
-  GridBuilderState createState() => GridBuilderState();
-}
-
-class GridBuilderState extends State<GridBuilder> {
-  void _toggle(int index) {
-    if (widget.isSelectionMode) {
-      setState(() {
-        widget.selectedList[index].status =
-            !(widget.selectedList[index].status);
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-        itemCount: widget.selectedList.length,
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemBuilder: (_, int index) {
-          return InkWell(
-            onTap: () => _toggle(index),
-            onLongPress: () {
-              if (!widget.isSelectionMode) {
-                setState(() {
-                  widget.selectedList[index].status = true;
-                });
-                widget.onSelectionChange!(true);
+        body: StreamBuilder<QuerySnapshot>(
+            stream: db.collection('animal').snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(color: Colors.blueGrey),
+                );
+              } else {
+                return ListView(
+                  children: snapshot.data!.docs.map((doc) {
+                    return Card(
+                      child: ListTile(
+                        title: Text(doc['descricao']),
+                      ),
+                    );
+                  }).toList(),
+                );
               }
-            },
-            child: GridTile(
-                child: Container(
-              child: widget.isSelectionMode
-                  ? Checkbox(
-                      onChanged: (bool? x) => _toggle(index),
-                      value: widget.selectedList[index].status)
-                  : const Icon(Icons.image),
-            )),
-          );
-        });
+            }));
   }
 }
+
+// class GridBuilder extends StatefulWidget {
+//   const GridBuilder({
+//     required this.selectedList,
+//     required this.isSelectionMode,
+//     required this.onSelectionChange,
+//   });
+
+//   final bool isSelectionMode;
+//   final Function(bool)? onSelectionChange;
+//   final List<Animal> selectedList;
+
+//   @override
+//   GridBuilderState createState() => GridBuilderState();
+// }
+
+// class GridBuilderState extends State<GridBuilder> {
+//   void _toggle(int index) {
+//     if (widget.isSelectionMode) {
+//       setState(() {
+//         widget.selectedList[index].status =
+//             !(widget.selectedList[index].status);
+//       });
+//     }
+//   }
+
+// @override
+// Widget build(BuildContext context) {
+//   return GridView.builder(
+//       itemCount: widget.selectedList.length,
+//       gridDelegate:
+//           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+//       itemBuilder: (_, int index) {
+//         return InkWell(
+//           onTap: () => _toggle(index),
+//           onLongPress: () {
+//             if (!widget.isSelectionMode) {
+//               setState(() {
+//                 widget.selectedList[index].status = true;
+//               });
+//               widget.onSelectionChange!(true);
+//             }
+//           },
+//           child: GridTile(
+//               child: Container(
+//             child: widget.isSelectionMode
+//                 ? Checkbox(
+//                     onChanged: (bool? x) => _toggle(index),
+//                     value: widget.selectedList[index].status)
+//                 : const Icon(Icons.image),
+//           )),
+//         );
+//       });
+// }
+//}
 
 class ListBuilder extends StatefulWidget {
   const ListBuilder({
