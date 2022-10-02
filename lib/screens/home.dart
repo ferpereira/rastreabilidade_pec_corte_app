@@ -20,21 +20,14 @@ class HomeState extends State<Home> {
   bool _selectAll = false;
   bool _isGridMode = false;
   late User _currentUser;
+  final db = FirebaseFirestore.instance;
+  late List<bool> _isChecked;
 
   @override
   void initState() {
     _currentUser = widget.user;
     super.initState();
     initializeSelection();
-  }
-
-  _asyncMethod() async {
-    Future<List<Animal>> db = Database.readItems();
-    List<Animal> listAnimal = [];
-    db.then((value) => (listAnimal.addAll(value)));
-    listLength = listAnimal.length;
-    _selected = listAnimal;
-    //print(listAnimal[0].descricao);
   }
 
   void initializeSelection() {
@@ -47,7 +40,6 @@ class HomeState extends State<Home> {
     super.dispose();
   }
 
-  final db = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,24 +56,6 @@ class HomeState extends State<Home> {
             style: TextStyle(color: Color(0xffffffff)),
           ),
           actions: <Widget>[
-            // if (_isGridMode)
-            //   IconButton(
-            //     icon: const Icon(Icons.grid_on, color: Colors.white),
-            //     onPressed: () {
-            //       setState(() {
-            //         _isGridMode = false;
-            //       });
-            //     },
-            //   )
-            // else
-            // IconButton(
-            //   icon: const Icon(Icons.list, color: Colors.white),
-            //   onPressed: () {
-            //     setState(() {
-            //       _isGridMode = true;
-            //     });
-            //   },
-            // ),
             if (isSelectionMode)
               TextButton(
                   child: !_selectAll
@@ -138,61 +112,6 @@ class HomeState extends State<Home> {
             }));
   }
 }
-
-// class GridBuilder extends StatefulWidget {
-//   const GridBuilder({
-//     required this.selectedList,
-//     required this.isSelectionMode,
-//     required this.onSelectionChange,
-//   });
-
-//   final bool isSelectionMode;
-//   final Function(bool)? onSelectionChange;
-//   final List<Animal> selectedList;
-
-//   @override
-//   GridBuilderState createState() => GridBuilderState();
-// }
-
-// class GridBuilderState extends State<GridBuilder> {
-//   void _toggle(int index) {
-//     if (widget.isSelectionMode) {
-//       setState(() {
-//         widget.selectedList[index].status =
-//             !(widget.selectedList[index].status);
-//       });
-//     }
-//   }
-
-// @override
-// Widget build(BuildContext context) {
-//   return GridView.builder(
-//       itemCount: widget.selectedList.length,
-//       gridDelegate:
-//           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-//       itemBuilder: (_, int index) {
-//         return InkWell(
-//           onTap: () => _toggle(index),
-//           onLongPress: () {
-//             if (!widget.isSelectionMode) {
-//               setState(() {
-//                 widget.selectedList[index].status = true;
-//               });
-//               widget.onSelectionChange!(true);
-//             }
-//           },
-//           child: GridTile(
-//               child: Container(
-//             child: widget.isSelectionMode
-//                 ? Checkbox(
-//                     onChanged: (bool? x) => _toggle(index),
-//                     value: widget.selectedList[index].status)
-//                 : const Icon(Icons.image),
-//           )),
-//         );
-//       });
-// }
-//}
 
 class ListBuilder extends StatefulWidget {
   const ListBuilder({

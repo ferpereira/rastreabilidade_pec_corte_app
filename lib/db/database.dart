@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:rastreabilidade_pec_corte_app/model/animal.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -55,5 +56,9 @@ class Database {
     } catch (error) {
       return [];
     }
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> listAnimal() {
+    return _firestore.collection('animal').snapshots();
   }
 }
