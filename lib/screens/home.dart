@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,7 @@ class HomeState extends State<Home> {
   late User _currentUser;
   final db = FirebaseFirestore.instance;
   late List<bool> _isChecked;
+  final bool checked = false;
 
   @override
   void initState() {
@@ -101,13 +104,48 @@ class HomeState extends State<Home> {
               } else {
                 return ListView(
                   children: snapshot.data!.docs.map((doc) {
-                    return Card(
-                      child: ListTile(
-                        title: Text(doc['descricao']),
+                    return Center(
+                      child: Row(
+                        children: [
+                          Icon(
+                            // <-- Icon
+                            Icons.update,
+                            size: 24.0,
+                          ),
+                          Container(
+                              padding: EdgeInsets.all(16.0),
+                              width: max(0, 250),
+                              height: 50,
+                              child: Text('Animal - ${doc['descricao']}')),
+                          Checkbox(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.padded,
+                              value: doc['status'],
+                              activeColor: Colors.black,
+                              checkColor: Colors.greenAccent,
+                              onChanged: (val) async {
+                                final Animal data = Animal(
+                                    doc.id,
+                                    doc["descricao"],
+                                    doc["dataNascimento"],
+                                    doc["status"]);
+                                data.status = val;
+                                await doc.reference.update(data.toMap());
+                              }),
+                        ],
                       ),
                     );
                   }).toList(),
                 );
+                // return ListView(
+                //   children: snapshot.data!.docs.map((doc) {
+                //     return Card(
+                //       child: ListTile(
+                //         title: Text(doc['descricao']),
+                //       ),
+                //     );
+                //   }).toList(),
+                // );
               }
             }));
   }
@@ -132,7 +170,7 @@ class _ListBuilderState extends State<ListBuilder> {
   void _toggle(int index) {
     if (widget.isSelectionMode) {
       setState(() {
-        widget.selectedList[index].status = !widget.selectedList[index].status;
+        //widget.selectedList[index].status = !widget.selectedList[index].status;
       });
     }
   }

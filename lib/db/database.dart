@@ -47,7 +47,8 @@ class Database {
           await _firestore.collection('animal').get().then((value) => value);
       var i = 0;
       querySnapshot.docs.forEach((doc) {
-        result.add(Animal(doc.id, doc["descricao"], doc["dataNascimento"]));
+        result.add(Animal(
+            doc.id, doc["descricao"], doc["dataNascimento"], doc["status"]));
         //print(result[i].descricao);
         i++;
       });
