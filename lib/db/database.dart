@@ -62,4 +62,14 @@ class Database {
   static Stream<QuerySnapshot<Map<String, dynamic>>> listAnimal() {
     return _firestore.collection('animal').snapshots();
   }
+
+  static Future<Animal> find(String id) async {
+    QuerySnapshot querySnapshot =
+        await _firestore.collection('animal').get().then((value) => value);
+    var result = querySnapshot.docs.where((element) => element.id == id);
+    result.first.data();
+    Animal retorn = Animal(result.first.id, result.first['descricao'],
+        result.first['dataNascimento'], result.first['status']);
+    return retorn;
+  }
 }

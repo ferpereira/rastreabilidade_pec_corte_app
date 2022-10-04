@@ -3,9 +3,10 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreabilidade_pec_corte_app/db/database.dart';
 import 'package:rastreabilidade_pec_corte_app/model/animal.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/profile_page.dart';
+
+import '../widgets/add_animal_form.dart';
 
 class Home extends StatefulWidget {
   final User user;
@@ -18,12 +19,9 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   bool isSelectionMode = false;
   late int listLength = 0;
-  late List<Animal> _selected = [];
   bool _selectAll = false;
-  bool _isGridMode = false;
   late User _currentUser;
   final db = FirebaseFirestore.instance;
-  late List<bool> _isChecked;
   final bool checked = false;
 
   @override
@@ -39,7 +37,6 @@ class HomeState extends State<Home> {
 
   @override
   void dispose() {
-    _selected.clear();
     super.dispose();
   }
 
@@ -60,29 +57,6 @@ class HomeState extends State<Home> {
           ),
           actions: <Widget>[
             if (isSelectionMode)
-              TextButton(
-                  child: !_selectAll
-                      ? const Text(
-                          'select all',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      : const Text(
-                          'unselect all',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                  onPressed: () {
-                    _selectAll = !_selectAll;
-                    setState(() {
-                      _selected.forEach((value) {
-                        if (_selectAll) {
-                          value.status = true;
-                        } else {
-                          value.status = false;
-                        }
-                      });
-                    });
-                  }),
-            if (isSelectionMode)
               IconButton(
                 icon: const Icon(Icons.close, color: Colors.white),
                 onPressed: () {
@@ -102,20 +76,28 @@ class HomeState extends State<Home> {
                   child: CircularProgressIndicator(color: Colors.blueGrey),
                 );
               } else {
-                return ListView(
+                var listView = ListView(
                   children: snapshot.data!.docs.map((doc) {
                     return Center(
                       child: Row(
                         children: [
-                          Icon(
-                            // <-- Icon
-                            Icons.update,
-                            size: 24.0,
-                          ),
+                          IconButton(
+                              icon: Icon(Icons.edit),
+                              iconSize: 32,
+                              color: Colors.blueGrey,
+                              tooltip: 'Toggle Bluetooth',
+                              onPressed: () async {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        AddAnimalForm(doc: doc.id),
+                                  ),
+                                );
+                              }),
                           Container(
                               padding: EdgeInsets.all(16.0),
-                              width: max(0, 250),
-                              height: 50,
+                              width: max(0, 230),
+                              height: 65,
                               child: Text('Animal - ${doc['descricao']}')),
                           Checkbox(
                               materialTapTargetSize:
@@ -137,66 +119,8 @@ class HomeState extends State<Home> {
                     );
                   }).toList(),
                 );
-                // return ListView(
-                //   children: snapshot.data!.docs.map((doc) {
-                //     return Card(
-                //       child: ListTile(
-                //         title: Text(doc['descricao']),
-                //       ),
-                //     );
-                //   }).toList(),
-                // );
+                return listView;
               }
             }));
-  }
-}
-
-class ListBuilder extends StatefulWidget {
-  const ListBuilder({
-    required this.selectedList,
-    required this.isSelectionMode,
-    required this.onSelectionChange,
-  });
-
-  final bool isSelectionMode;
-  final List<Animal> selectedList;
-  final Function(bool)? onSelectionChange;
-
-  @override
-  State<ListBuilder> createState() => _ListBuilderState();
-}
-
-class _ListBuilderState extends State<ListBuilder> {
-  void _toggle(int index) {
-    if (widget.isSelectionMode) {
-      setState(() {
-        //widget.selectedList[index].status = !widget.selectedList[index].status;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: widget.selectedList.length,
-        itemBuilder: (_, int index) {
-          return ListTile(
-              onTap: () => _toggle(index),
-              onLongPress: () {
-                if (!widget.isSelectionMode) {
-                  setState(() {
-                    widget.selectedList[index].status = true;
-                  });
-                  widget.onSelectionChange!(true);
-                }
-              },
-              trailing: widget.isSelectionMode
-                  ? Checkbox(
-                      value: widget.selectedList[index].status,
-                      onChanged: (bool? x) => _toggle(index),
-                    )
-                  : const SizedBox.shrink(),
-              title: Text(widget.selectedList[index].descricao ?? ''));
-        });
   }
 }

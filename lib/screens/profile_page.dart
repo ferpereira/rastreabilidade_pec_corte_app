@@ -77,7 +77,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () async {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => AddAnimalForm(),
+                              builder: (context) => AddAnimalForm(
+                                doc: "",
+                              ),
                             ),
                           );
                         },
