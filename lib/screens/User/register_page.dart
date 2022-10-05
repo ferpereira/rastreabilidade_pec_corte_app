@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:rastreabilidade_pec_corte_app/screens/profile_page.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/home_page.dart';
 import 'package:rastreabilidade_pec_corte_app/utils/fire_auth.dart';
 import 'package:rastreabilidade_pec_corte_app/utils/validator.dart';
 
@@ -133,7 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                               .pushAndRemoveUntil(
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  ProfilePage(user: user),
+                                                  HomePage(user: user),
                                             ),
                                             ModalRoute.withName('/'),
                                           );

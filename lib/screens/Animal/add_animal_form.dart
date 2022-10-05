@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import '../db/database.dart';
-import '../model/animal.dart';
+import '../../db/database.dart';
+import '../../model/animal.dart';
 
 class AddAnimalForm extends StatefulWidget {
   final String? doc;

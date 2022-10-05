@@ -1,22 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreabilidade_pec_corte_app/screens/home.dart';
-import 'package:rastreabilidade_pec_corte_app/screens/login_page.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/Animal/listAnimal.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/Login/login_page.dart';
 import 'package:rastreabilidade_pec_corte_app/utils/fire_auth.dart';
-import 'package:rastreabilidade_pec_corte_app/widgets/add_animal_form.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/Animal/add_animal_form.dart';
 
 import '../db/database.dart';
 
-class ProfilePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final User user;
 
-  const ProfilePage({required this.user});
+  const HomePage({required this.user});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _HomePageState extends State<HomePage> {
   bool _isSendingVerification = false;
   bool _isSigningOut = false;
 
@@ -130,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () async {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => Home(user: _currentUser),
+                    builder: (context) => ListAnimal(user: _currentUser),
                   ),
                 );
               },

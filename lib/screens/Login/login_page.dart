@@ -2,8 +2,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreabilidade_pec_corte_app/screens/profile_page.dart';
-import 'package:rastreabilidade_pec_corte_app/screens/register_page.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/home_page.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/User/register_page.dart';
 import 'package:rastreabilidade_pec_corte_app/utils/fire_auth.dart';
 import 'package:rastreabilidade_pec_corte_app/utils/validator.dart';
 
@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => ProfilePage(
+          builder: (context) => HomePage(
             user: user,
           ),
         ),
@@ -171,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   .pushReplacement(
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ProfilePage(user: user),
+                                                      HomePage(user: user),
                                                 ),
                                               );
                                             } else {
