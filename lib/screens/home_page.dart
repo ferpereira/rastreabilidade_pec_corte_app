@@ -6,6 +6,7 @@ import 'package:rastreabilidade_pec_corte_app/utils/fire_auth.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Animal/add_animal_form.dart';
 
 import '../db/database.dart';
+import '../widgets/buttonHome.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
@@ -47,102 +48,103 @@ class _HomePageState extends State<HomePage> {
             ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'EMAIL: ${_currentUser.email}',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            SizedBox(height: 16.0),
-            _isSendingVerification
-                ? CircularProgressIndicator()
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          setState(() {
-                            _isSendingVerification = true;
-                          });
-                          await _currentUser.sendEmailVerification();
-                          setState(() {
-                            _isSendingVerification = false;
-                          });
-                        },
-                        child: Text('Verify email'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => AddAnimalForm(
-                                doc: "",
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text('Registros'),
-                      ),
-                      SizedBox(width: 8.0),
-                      IconButton(
-                        icon: Icon(Icons.refresh),
-                        onPressed: () async {
-                          User? user = await FireAuth.refreshUser(_currentUser);
+      body:
+          ButtonHome(currentUser: _currentUser),
+        // child: Column(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     Text(
+        //       'EMAIL: ${_currentUser.email}',
+        //       style: Theme.of(context).textTheme.bodyText1,
+        //     ),
+        //     SizedBox(height: 16.0),
+        //     _isSendingVerification
+        //         ? CircularProgressIndicator()
+        //         : Row(
+        //             mainAxisSize: MainAxisSize.min,
+        //             children: [
+        //               ElevatedButton(
+        //                 onPressed: () async {
+        //                   setState(() {
+        //                     _isSendingVerification = true;
+        //                   });
+        //                   await _currentUser.sendEmailVerification();
+        //                   setState(() {
+        //                     _isSendingVerification = false;
+        //                   });
+        //                 },
+        //                 child: Text('Verify email'),
+        //               ),
+        //               ElevatedButton(
+        //                 onPressed: () async {
+        //                   Navigator.of(context).push(
+        //                     MaterialPageRoute(
+        //                       builder: (context) => AddAnimalForm(
+        //                         doc: "",user: _currentUser,
+        //                       ),
+        //                     ),
+        //                   );
+        //                 },
+        //                 child: Text('Registros'),
+        //               ),
+        //               SizedBox(width: 8.0),
+        //               IconButton(
+        //                 icon: Icon(Icons.refresh),
+        //                 onPressed: () async {
+        //                   User? user = await FireAuth.refreshUser(_currentUser);
+        //
+        //                   if (user != null) {
+        //                     setState(() {
+        //                       _currentUser = user;
+        //                     });
+        //                   }
+        //                 },
+        //               ),
+        //             ],
+        //           ),
+        //     SizedBox(height: 16.0),
+        //     _isSigningOut
+        //         ? CircularProgressIndicator()
+        //         : ElevatedButton(
+        //             onPressed: () async {
+        //               setState(() {
+        //                 _isSigningOut = true;
+        //               });
+        //               await FirebaseAuth.instance.signOut();
+        //               setState(() {
+        //                 _isSigningOut = false;
+        //               });
+        //               Navigator.of(context).pushReplacement(
+        //                 MaterialPageRoute(
+        //                   builder: (context) => LoginPage(),
+        //                 ),
+        //               );
+        //             },
+        //             child: Text('Sign out'),
+        //             style: ElevatedButton.styleFrom(
+        //               primary: Colors.red,
+        //               shape: RoundedRectangleBorder(
+        //                 borderRadius: BorderRadius.circular(30),
+        //               ),
+        //             ),
+        //           ),
+        //     MaterialButton(
+        //       onPressed: () async {
+        //         Navigator.of(context).pushReplacement(
+        //           MaterialPageRoute(
+        //             builder: (context) => ListAnimal(user: _currentUser),
+        //           ),
+        //         );
+        //       },
+        //       child: const Text('Lista registro'),
+        //       color: Colors.blue,
+        //       textColor: Colors.white,
+        //       minWidth: 300,
+        //       height: 40,
+        //     ),
+        //   ],
+        // ),
 
-                          if (user != null) {
-                            setState(() {
-                              _currentUser = user;
-                            });
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-            SizedBox(height: 16.0),
-            _isSigningOut
-                ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: () async {
-                      setState(() {
-                        _isSigningOut = true;
-                      });
-                      await FirebaseAuth.instance.signOut();
-                      setState(() {
-                        _isSigningOut = false;
-                      });
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => LoginPage(),
-                        ),
-                      );
-                    },
-                    child: Text('Sign out'),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                  ),
-            MaterialButton(
-              onPressed: () async {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => ListAnimal(user: _currentUser),
-                  ),
-                );
-              },
-              child: const Text('Lista registro'),
-              color: Colors.blue,
-              textColor: Colors.white,
-              minWidth: 300,
-              height: 40,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

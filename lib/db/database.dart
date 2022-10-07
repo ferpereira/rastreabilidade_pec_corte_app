@@ -10,30 +10,71 @@ class Database {
   static String? userUid;
 
   static Future<void> addItem({
-    required String descricao,
-    required String dataNascimento,
+    required String description,
+    required String sisbovEarring,
+    required String birthDate,
+    required String flock,
+    required String breed,
+    required String leatherColor,
+    required String sex,
+    required String slaughterRecord,
+    bool? status
   }) async {
     DocumentReference documentReferencer = _mainCollection.doc(userUid);
 
     Map<String, dynamic> data = <String, dynamic>{
-      "descricao": descricao,
-      "dataNascimento": dataNascimento,
+      'description': description,
+      'sisbovEarring': sisbovEarring,
+      'birthDate': birthDate,
+      'flock': flock,
+      'breed': breed,
+      'leatherColor': leatherColor,
+      'sex': sex,
+      'slaughterRecord': slaughterRecord,
+      'status':status,
     };
 
     await documentReferencer
         .set(data)
-        .whenComplete(() => print("Note item added to the database"))
+        .whenComplete(() => print("dados registrado com sucesso "))
         .catchError((e) => print(e));
   }
 
-  // static Stream<QuerySnapshot> readItems3() {
-  //   CollectionReference notesItemCollection =
-  //       _mainCollection.doc(userUid).collection('animal');
-  //   print(notesItemCollection);
-  //   return notesItemCollection.snapshots();
-  // }
+  static Future<String> updateItem({
+    required String id,
+    required String description,
+    required String sisbovEarring,
+    required String birthDate,
+    required String flock,
+    required String breed,
+    required String leatherColor,
+    required String sex,
+    required String slaughterRecord,
+    bool? status
+  }) async {
+    DocumentReference documentReferencer = _mainCollection.doc(id);
 
-  static readItems4() {
+    Map<String, dynamic> data = <String, dynamic>{
+      'description': description,
+      'sisbovEarring': sisbovEarring,
+      'birthDate': birthDate,
+      'flock': flock,
+      'breed': breed,
+      'leatherColor': leatherColor,
+      'sex': sex,
+      'slaughterRecord': slaughterRecord,
+      'status':status,
+    };
+    var value = await documentReferencer
+          .update(data)
+          .whenComplete(() => print('Dados alterados com sucesso!!'))
+          .catchError((e) => print(e));
+
+    return Future.value('done');
+
+  }
+
+  static readItemsN() {
     _firestore.collection("animal").get().then(
           (res) => print('Successfully completed ${res.docs.last.id}'),
           onError: (e) => print("Error completing: $e"),
@@ -48,7 +89,16 @@ class Database {
       var i = 0;
       querySnapshot.docs.forEach((doc) {
         result.add(Animal(
-            doc.id, doc["descricao"], doc["dataNascimento"], doc["status"]));
+            doc.id,
+            doc['description'],
+            doc['sisbovEarring'],
+            doc['birthDate'],
+            doc['flock'],
+            doc['breed'],
+            doc['leatherColor'],
+            doc['sex'],
+            doc['slaughterRecord'],
+            doc["status"]));
         //print(result[i].descricao);
         i++;
       });
@@ -68,8 +118,16 @@ class Database {
         await _firestore.collection('animal').get().then((value) => value);
     var result = querySnapshot.docs.where((element) => element.id == id);
     result.first.data();
-    Animal retorn = Animal(result.first.id, result.first['descricao'],
-        result.first['dataNascimento'], result.first['status']);
+    Animal retorn = Animal(result.first.id,
+        result.first['description'],
+        result.first['sisbovEarring'],
+        result.first['birthDate'],
+        result.first['flock'],
+        result.first['breed'],
+        result.first['leatherColor'],
+        result.first['sex'],
+        result.first['slaughterRecord'],
+        result.first["status"]);
     return retorn;
   }
 }
