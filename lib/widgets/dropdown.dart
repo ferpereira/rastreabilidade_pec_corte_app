@@ -40,7 +40,7 @@ class DropdownState extends State<Dropdown> {
                   filled: true,
                   fillColor: Colors.blueAccent,
                 ),
-                validator: (value) => value == null ? "Select a country" : null,
+                validator: (value) => value == null ? "Selecione o sexo do animal" : null,
                 dropdownColor: Colors.blueAccent,
                 value: selectedValue,
                 onChanged: (String? newValue) {
@@ -49,14 +49,7 @@ class DropdownState extends State<Dropdown> {
                   });
                 },
                 items: dropdownItems),
-            ElevatedButton(
-                onPressed: () {
-                  if (_dropdownFormKey.currentState!.validate()) {
-                    //valid flow
-                  }
-                },
-                child: Text("Submit"))
-          ],
+           ],
         ));
   }
 }

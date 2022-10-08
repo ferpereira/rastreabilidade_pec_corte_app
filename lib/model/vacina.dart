@@ -3,16 +3,15 @@ class Vaccine {
   String? description; // descrição
   String? dateFabrication; // data Fabricação
   String? dateValidity; // data de validade
-  String? laboratory; // precedimento
+  String? laboratory; // procedimento
   bool? status = true ;
 
   Vaccine(
       String id,
       String description,
       String dateFabrication,
-      String dateEnd,
-      List<String> idFlock,
-      String procedure,
+      String dateValidity,
+      String laboratory,
       bool status) {
     this.id = id;
     this.description = description;

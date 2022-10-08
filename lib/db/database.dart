@@ -9,7 +9,7 @@ final CollectionReference _mainCollection = _firestore.collection('animal');
 class Database {
   static String? userUid;
 
-  static Future<void> addItem({
+  static Future<String> addItem({
     required String description,
     required String sisbovEarring,
     required String birthDate,
@@ -34,10 +34,11 @@ class Database {
       'status':status,
     };
 
-    await documentReferencer
+    var value = await documentReferencer
         .set(data)
         .whenComplete(() => print("dados registrado com sucesso "))
         .catchError((e) => print(e));
+    return Future.value('done');
   }
 
   static Future<String> updateItem({

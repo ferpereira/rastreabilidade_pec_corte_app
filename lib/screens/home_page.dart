@@ -39,6 +39,7 @@ class _HomePageState extends State<HomePage> {
         title: Text(
           'Dashboard',
           style: TextStyle(color: Color(0xffffffff)),
+
         ),
         actions: <Widget>[
           if (_currentUser != null)

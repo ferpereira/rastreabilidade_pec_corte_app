@@ -5,6 +5,8 @@ import 'package:rastreabilidade_pec_corte_app/screens/Animal/add_animal_form.dar
 import 'package:rastreabilidade_pec_corte_app/screens/Animal/listAnimal.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Rebanho/add_flock_from.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Rebanho/list_flock.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/Vacinas/add_vaccine_form.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/Vacinas/list_vaccine.dart';
 
 import '../screens/Login/login_page.dart';
 
@@ -32,7 +34,7 @@ class ButtonHome extends StatelessWidget {
               child: Text('CADASTRO DE ANIMAL'),
               color: Colors.blue,
               textColor: Colors.black,
-              minWidth: 150,
+              minWidth: 160,
               height: 120,
             ),
             MaterialButton(
@@ -46,7 +48,7 @@ class ButtonHome extends StatelessWidget {
               child: Text('LISTA DE ANIMAL'),
               color: Colors.lightBlue,
               textColor: Colors.black,
-              minWidth: 170,
+              minWidth: 160,
               height: 120,
             ),
           ]),
@@ -79,25 +81,41 @@ class ButtonHome extends StatelessWidget {
               height: 120,
             ),
           ]),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           MaterialButton(
-            onPressed: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => LoginPage(),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddVaccineForm(doc: "",
+                user: currentUser,
               ),
             ),
-            child: Text('CADASTRO DE VACINAS'),
-            color: Colors.teal,
-            textColor: Colors.black,
-            minWidth: 350,
-            height: 120,
           ),
+          child: Text('CADASTRO DE VACINAS'),
+          color: Colors.teal,
+          textColor: Colors.black,
+          minWidth: 160,
+          height: 120,
+        ),
+        MaterialButton(
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ListVaccine(user: currentUser),
+            ),
+          ),
+          child: Text('LISTA DE VACINAS'),
+          color: Colors.lightGreen,
+          textColor: Colors.black,
+          minWidth: 160,
+          height: 120,
+        ),
+      ]),
           MaterialButton(
             onPressed: () => Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => LoginPage(),
               ),
             ),
-            child: Text('INCLUIR PLANEJAMENTO'),
+            child: Text('REGISTRAR VACINAÇÃO'),
             color: Colors.deepPurple,
             textColor: Colors.black,
             minWidth: 350,
@@ -109,7 +127,7 @@ class ButtonHome extends StatelessWidget {
                 builder: (context) => LoginPage(),
               ),
             ),
-            child: Text('REGISTRA ATIVIDADE PLANEJAMENTO'),
+            child: Text('LISTAR VACINAÇÃO'),
             color: Colors.lightBlue,
             textColor: Colors.black,
             minWidth: 350,

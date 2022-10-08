@@ -1,57 +1,62 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rastreabilidade_pec_corte_app/model/rebanho.dart';
+import 'package:rastreabilidade_pec_corte_app/model/vacina.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-final CollectionReference _mainCollection = _firestore.collection('rebanho');
+final CollectionReference _mainCollection = _firestore.collection('vacina');
 
-class DatabaseFlock {
+class DatabaseVaccine {
   static String? userUid;
   /*
+   String  id = '';
   String? description; // descrição
-  String? maximumAmount; // quantidade máxima
-  String? farm; //fazenda
-  String? herdDate; //data rebanho
+  String? dateFabrication; // data Fabricação
+  String? dateValidity; // data de validade
+  String? laboratory; // procedimento
+  bool? status = true ;
    */
 
-  static Future<void> addItem(
+  static Future<String> addItem(
       {required String description,
-      required String maximumAmount,
-      required String farm,
-      required String herdDate,
+      required String dateFabrication,
+      required String dateValidity,
+      required String laboratory,
       bool? status}) async {
     DocumentReference documentReferencer = _mainCollection.doc(userUid);
 
     Map<String, dynamic> data = <String, dynamic>{
       'description': description,
-      'maximumAmount': maximumAmount,
-      'farm': farm,
-      'herdDate': herdDate,
+      'dateFabrication': dateFabrication,
+      'dateValidity': dateValidity,
+      'laboratory': laboratory,
       'status': status,
     };
 
-    await documentReferencer
+    var value = await documentReferencer
         .set(data)
-        .whenComplete(() => print("dados registrado com sucesso "))
+        .whenComplete(() => print('Dados alterados com sucesso!!'))
         .catchError((e) => print(e));
+
+    return Future.value('done');
   }
 
   static Future<String> updateItem(
       {required String id,
       required String description,
-      required String maximumAmount,
-      required String farm,
-      required String herdDate,
+      required String dateFabrication,
+      required String dateValidity,
+      required String laboratory,
       bool? status}) async {
     DocumentReference documentReferencer = _mainCollection.doc(id);
 
     Map<String, dynamic> data = <String, dynamic>{
       'description': description,
-      'maximumAmount': maximumAmount,
-      'farm': farm,
-      'herdDate': herdDate,
+      'dateFabrication': dateFabrication,
+      'dateValidity': dateValidity,
+      'laboratory': laboratory,
       'status': status,
     };
+
     var value = await documentReferencer
         .update(data)
         .whenComplete(() => print('Dados alterados com sucesso!!'))
@@ -61,21 +66,21 @@ class DatabaseFlock {
   }
 
   static readItemsN() {
-    _firestore.collection("rebanho").get().then(
+    _firestore.collection("vacina").get().then(
           (res) => print('Successfully completed ${res.docs.last.id}'),
           onError: (e) => print("Error completing: $e"),
         );
   }
 
-  static Future<List<Flock>> readItems() async {
+  static Future<List<Vaccine>> readItems() async {
     try {
-      List<Flock> result = [];
+      List<Vaccine> result = [];
       QuerySnapshot querySnapshot =
-          await _firestore.collection('rebanho').get().then((value) => value);
+          await _firestore.collection('vacina').get().then((value) => value);
       var i = 0;
       querySnapshot.docs.forEach((doc) {
-        result.add(Flock(doc.id, doc['description'], doc['maximumAmount'],
-            doc['farm'], doc['herdDate'], doc["status"]));
+        result.add(Vaccine(doc.id, doc['description'], doc['dateFabrication'],
+            doc['dateValidity'], doc['laboratory'], doc["status"]));
         //print(result[i].descricao);
         i++;
       });
@@ -87,20 +92,20 @@ class DatabaseFlock {
   }
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> ListFlock() {
-    return _firestore.collection('rebanho').snapshots();
+    return _firestore.collection('vacina').snapshots();
   }
 
-  static Future<Flock> find(String id) async {
+  static Future<Vaccine> find(String id) async {
     QuerySnapshot querySnapshot =
-        await _firestore.collection('rebanho').get().then((value) => value);
+        await _firestore.collection('vacina').get().then((value) => value);
     var result = querySnapshot.docs.where((element) => element.id == id);
     result.first.data();
-    Flock retorn = Flock(
+    Vaccine retorn = Vaccine(
         result.first.id,
         result.first['description'],
-        result.first['maximumAmount'],
-        result.first['farm'],
-        result.first['herdDate'],
+        result.first['dateFabrication'],
+        result.first['dateValidity'],
+        result.first['laboratory'],
         result.first["status"]);
     return retorn;
   }

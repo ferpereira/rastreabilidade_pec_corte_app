@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Animal/listAnimal.dart';
+import 'package:rastreabilidade_pec_corte_app/utils/validator.dart';
 
 import '../../db/database.dart';
 import '../../model/animal.dart';
@@ -324,7 +325,7 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                     ).show(context);
 
                   } else {
-                    await Database.addItem(
+                    var s = await Database.addItem(
                       description: descriptionController.text,
                       sisbovEarring: sisbovEarringController.text,
                       birthDate: birthDateController.text,
@@ -335,7 +336,26 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                       slaughterRecord: slaughterRecordController.text,
                       status: isChecked,
                       );
-                  }
+                      if( s == 'done'){
+                        msg = "Dados registrado com sucesso!";
+                        corToast = Colors.green;
+                        iconToast = Icons.update;
+                        cleanForm(false);
+                      }else{
+                        msg = "Não foi possivel registrar os dados";
+                        iconToast = Icons.error;
+                        corToast = Colors.redAccent[400];
+                      }
+                      // ignore: use_build_context_synchronously
+                      MotionToast(
+                        color: corToast!,
+                        description: "${msg}",
+                        icon: iconToast,
+                        enableAnimation: false,
+                        animationDuration: Duration(seconds: 3),
+                        ).show(context);
+                      }
+
                 },
                 child: Text('${lbButton}'),
                 color: Colors.blueGrey,
