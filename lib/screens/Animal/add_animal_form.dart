@@ -7,6 +7,7 @@ import 'package:rastreabilidade_pec_corte_app/screens/Animal/listAnimal.dart';
 
 import '../../db/database.dart';
 import '../../model/animal.dart';
+import '../../widgets/dropdown.dart';
 
 class AddAnimalForm extends StatefulWidget {
   final String? doc;
@@ -244,6 +245,7 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                 height: 30,
               ),
 
+              Dropdown(),
               TextField(
                 controller: sexController,
                 keyboardType: TextInputType.text,

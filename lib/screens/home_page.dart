@@ -42,10 +42,18 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: <Widget>[
           if (_currentUser != null)
-            Text(
-              'User:${_currentUser.displayName}',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
+            Row(
+              children:[
+                  Icon(Icons.account_circle),
+                  Text(
+                  '${_currentUser.displayName}',
+                  style: TextStyle (color: Colors.white, fontSize: 18),
+                  ),
+              ]
+
+            )
+
+
         ],
       ),
       body:

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class Animal {
   String  id = '';
   String? description;
