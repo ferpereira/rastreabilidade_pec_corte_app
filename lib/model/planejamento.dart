@@ -1,10 +1,12 @@
+import 'package:rastreabilidade_pec_corte_app/model/registro_procedimento.dart';
+
 class Planning {
   String  id = '';
   String? description; // descrição
   String? dateBegin; // dataInicio
   String? dateEnd; // dataFim
-  List<String> idFlock = []; //rebanhos
-  String? procedure; // precedimento
+  String? idFlock ; //rebanhos
+  String? procedure; // precedimento//lista de registro
   bool? status = true ;
 
   Planning(
@@ -12,7 +14,7 @@ class Planning {
       String description,
       String dateBegin,
       String dateEnd,
-      List<String> idFlock,
+      String idFlock,
       String procedure,
       bool status) {
     this.id = id;

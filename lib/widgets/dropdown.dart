@@ -22,20 +22,18 @@ class DropdownState extends State<Dropdown> {
   }
   @override
   Widget build(BuildContext context) {
-    return Form(
-        key: _dropdownFormKey,
-        child: Column(
+    return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             DropdownButtonFormField(
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 2),
-                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: Colors.cyan, width: 2),
+                    borderRadius: BorderRadius.circular(0),
                   ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue, width: 2),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(0),
                   ),
                   filled: true,
                   fillColor: Colors.blueAccent,
@@ -49,7 +47,7 @@ class DropdownState extends State<Dropdown> {
                   });
                 },
                 items: dropdownItems),
-           ],
-        ));
+          ]
+        );
   }
 }

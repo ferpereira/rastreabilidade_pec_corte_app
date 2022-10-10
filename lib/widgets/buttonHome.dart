@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Animal/add_animal_form.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Animal/listAnimal.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/Planejamento/add_planning_form.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/Planejamento/list_planning.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Rebanho/add_flock_from.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Rebanho/list_flock.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Vacinas/add_vaccine_form.dart';
@@ -109,32 +111,55 @@ class ButtonHome extends StatelessWidget {
           height: 120,
         ),
       ]),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           MaterialButton(
-            onPressed: () => Navigator.of(context).pushReplacement(
+            onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => LoginPage(),
+                builder: (context) => AddPlanningForm(doc: "",
+                    user: currentUser,
+                ),
               ),
             ),
-            child: Text('REGISTRAR VACINAÇÃO'),
+            child: Text('CADASTRAR PLANEJAMENTO'),
             color: Colors.deepPurple,
             textColor: Colors.black,
-            minWidth: 350,
+            minWidth: 100,
             height: 120,
           ),
-          MaterialButton(
-            onPressed: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => LoginPage(),
-              ),
+        MaterialButton(
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ListPlanning(user: currentUser),
             ),
-            child: Text('LISTAR VACINAÇÃO'),
-            color: Colors.lightBlue,
+          ),
+          child: Text('LISTA PLANEJAMENTO'),
+          color: Colors.deepPurple,
+          textColor: Colors.black,
+          minWidth: 160,
+          height: 120,
+        ),
+
+      ]),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+
+        MaterialButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => LoginPage(),
+                ),
+              );
+            },
+            child: Text('Logout'),
+            color: Colors.red,
             textColor: Colors.black,
-            minWidth: 350,
-            height: 120,
+            minWidth: 100,
+            height: 50,
           ),
         ],
-      ),
+        ),
+        ]),
     );
   }
 }

@@ -8,12 +8,12 @@ import 'package:rastreabilidade_pec_corte_app/utils/validator.dart';
 
 import '../../db/database.dart';
 import '../../model/animal.dart';
-import '../../widgets/dropdown.dart';
 
 class AddAnimalForm extends StatefulWidget {
   final String? doc;
   final User user;
-  const AddAnimalForm({Key? key, this.doc, required this.user}) : super(key: key);
+  const AddAnimalForm({Key? key, this.doc, required this.user})
+      : super(key: key);
 
   @override
   State<AddAnimalForm> createState() => _AddAnimalFormState();
@@ -50,6 +50,16 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
   Color? corToast = Colors.redAccent[400];
   IconData iconToast = Icons.error;
   late User user;
+  String? selectedValue = null;
+
+  List<DropdownMenuItem<String>> get dropdownItems{
+    List<DropdownMenuItem<String>> menuItems = [
+      DropdownMenuItem(child: Text("Selecione sexo:"),value: ""),
+      DropdownMenuItem(child: Text("M"),value: "M"),
+      DropdownMenuItem(child: Text("F"),value: "F"),
+    ];
+    return menuItems;
+  }
 
   @override
   void initState() {
@@ -63,9 +73,10 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
     }
     user = widget.user;
     super.initState();
+
   }
 
-  void cleanForm(bool r){
+  void cleanForm(bool r) {
     descriptionController.text = "";
     sisbovEarringController.text = "";
     birthDateController.text = "";
@@ -76,11 +87,10 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
     slaughterRecordController.text = "";
     statusController.text = "";
 
-    if(r){
+    if (r) {
       _docEdit = "";
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => ListAnimal(user: user)));
+          MaterialPageRoute(builder: (context) => ListAnimal(user: user)));
     }
   }
 
@@ -95,12 +105,11 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        if(action == "nasc"){
+        if (action == "nasc") {
           birthDateController.text = selectedDate.toString();
-        }else{
+        } else {
           slaughterRecordController.text = selectedDate.toString();
         }
-
       });
     }
   }
@@ -114,20 +123,20 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
           flockController.text = value.flock.toString(),
           breedController.text = value.breed.toString(),
           leatherColorController.text = value.leatherColor.toString(),
-          sexController.text = value.sex.toString(),
+          sexController.text = selectedValue.toString(),
           slaughterRecordController.text = value.slaughterRecord.toString(),
           setState(() {
             isChecked = value.status!;
-            if(isChecked){
+            if (isChecked) {
               statusController.text = "true";
               print('ligado');
-            }else{
+            } else {
               statusController.text = "false";
               print('desligado');
             }
           })
-
         });
+    selectedValue = sexController.text.toString();
   }
 
   @override
@@ -183,17 +192,18 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextField(
-                  controller: birthDateController,
-                  keyboardType: TextInputType.text,
-                  enabled: false,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Data Nascimento',
+                    controller: birthDateController,
+                    keyboardType: TextInputType.text,
+                    enabled: false,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Data Nascimento',
+                    ),
                   ),
-                ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   MaterialButton(
-
                     onPressed: () => _selectDate(context, "nasc"),
                     child: Text('Selecione a data'),
                     color: Colors.blueGrey,
@@ -201,7 +211,6 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                     minWidth: 200,
                     height: 40,
                   ),
-
                 ],
               ),
               const SizedBox(
@@ -219,7 +228,6 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
               const SizedBox(
                 height: 30,
               ),
-
               TextField(
                 controller: breedController,
                 keyboardType: TextInputType.text,
@@ -232,7 +240,6 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
               const SizedBox(
                 height: 30,
               ),
-
               TextField(
                 controller: leatherColorController,
                 keyboardType: TextInputType.text,
@@ -246,20 +253,62 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                 height: 30,
               ),
 
-              Dropdown(),
-              TextField(
-                controller: sexController,
-                keyboardType: TextInputType.text,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Sexo do Animal',
-                  hintText: 'Informe o sexo do animal',
-                ),
-              ),
+
+          Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.cyan, width: 2),
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 2),
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    dropdownColor: Colors.white,
+                    value: selectedValue,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        sexController.text = newValue.toString();
+                        selectedValue = newValue!;
+                      });
+                    },
+                    items: dropdownItems),
+              ]
+          ),
               const SizedBox(
                 height: 30,
               ),
 
+/* DropdownButton<String>(
+                value: dropdownValue,
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  elevation: 16,
+                  style: const TextStyle(color: Colors.deepPurple),
+                  underline: Container(
+                    height: 3,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      dropdownValue = value!;
+                    });
+                  },
+                  items: items.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+          ),
+              const SizedBox(
+                height: 30,
+              ), */
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -272,31 +321,33 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                       labelText: 'Data do abate do animal',
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   MaterialButton(
-                    onPressed: () => _selectDate(context, "" ),
+                    onPressed: () => _selectDate(context, ""),
                     child: Text('Selecione a data abate'),
                     color: Colors.blueGrey[200],
                     textColor: Colors.white,
                     minWidth: 180,
                     height: 40,
                   ),
-
                 ],
               ),
               const SizedBox(
                 height: 30,
               ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text('Situação do animal (Ativo/Inativo)', textAlign: TextAlign.left),
-              _MyStatefulWidgetState(context),
-            ]),
+              Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                Text('Situação do animal (Ativo/Inativo)',
+                    textAlign: TextAlign.left),
+                _MyStatefulWidgetState(context),
+              ]),
               MaterialButton(
                 onPressed: () async {
                   if (_findRegister) {
-                    var s = await Database.updateItem(id: _docEdit!, description: descriptionController.text,
+                    var s = await Database.updateItem(
+                      id: _docEdit!,
+                      description: descriptionController.text,
                       sisbovEarring: sisbovEarringController.text,
                       birthDate: birthDateController.text,
                       flock: flockController.text,
@@ -304,13 +355,14 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                       leatherColor: leatherColorController.text,
                       sex: sexController.text,
                       slaughterRecord: slaughterRecordController.text,
-                      status: isChecked,);
-                    if(s == 'done'){
+                      status: isChecked,
+                    );
+                    if (s == 'done') {
                       msg = "Dados alterado com sucesso!";
                       corToast = Colors.green;
                       iconToast = Icons.update;
                       cleanForm(true);
-                    }else{
+                    } else {
                       msg = "Não foi possivel alterar os dados";
                       iconToast = Icons.error;
                       corToast = Colors.redAccent[400];
@@ -323,7 +375,6 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                       enableAnimation: false,
                       animationDuration: Duration(seconds: 3),
                     ).show(context);
-
                   } else {
                     var s = await Database.addItem(
                       description: descriptionController.text,
@@ -335,27 +386,26 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                       sex: sexController.text,
                       slaughterRecord: slaughterRecordController.text,
                       status: isChecked,
-                      );
-                      if( s == 'done'){
-                        msg = "Dados registrado com sucesso!";
-                        corToast = Colors.green;
-                        iconToast = Icons.update;
-                        cleanForm(false);
-                      }else{
-                        msg = "Não foi possivel registrar os dados";
-                        iconToast = Icons.error;
-                        corToast = Colors.redAccent[400];
-                      }
-                      // ignore: use_build_context_synchronously
-                      MotionToast(
-                        color: corToast!,
-                        description: "${msg}",
-                        icon: iconToast,
-                        enableAnimation: false,
-                        animationDuration: Duration(seconds: 3),
-                        ).show(context);
-                      }
-
+                    );
+                    if (s == 'done') {
+                      msg = "Dados registrado com sucesso!";
+                      corToast = Colors.green;
+                      iconToast = Icons.update;
+                      cleanForm(false);
+                    } else {
+                      msg = "Não foi possivel registrar os dados";
+                      iconToast = Icons.error;
+                      corToast = Colors.redAccent[400];
+                    }
+                    // ignore: use_build_context_synchronously
+                    MotionToast(
+                      color: corToast!,
+                      description: "${msg}",
+                      icon: iconToast,
+                      enableAnimation: false,
+                      animationDuration: Duration(seconds: 3),
+                    ).show(context);
+                  }
                 },
                 child: Text('${lbButton}'),
                 color: Colors.blueGrey,
@@ -391,19 +441,16 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
       onChanged: (bool? value) {
         setState(() {
           isChecked = value!;
-          if(isChecked){
+          if (isChecked) {
             statusController.text = "true";
-          }else{
+          } else {
             statusController.text = "false";
             isChecked = false;
           }
         });
-    },
+      },
     );
   }
 
 
-
 }
-
-
