@@ -6,7 +6,7 @@ import 'package:rastreabilidade_pec_corte_app/db/database_planning.dart';
 import 'package:rastreabilidade_pec_corte_app/model/planejamento.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Planejamento/list_planning.dart';
 
-import '../../db/database.dart';
+import '../../db/database_animal.dart';
 
 class AddPlanningForm extends StatefulWidget {
   final String? doc;
@@ -50,11 +50,10 @@ class _AddPlanningFormState extends State<AddPlanningForm> {
   Stream<QuerySnapshot>? _rebanho;
   String? rebanho;
 
-  List<DropdownMenuItem<String>> get dropdownItems{
+  List<DropdownMenuItem<String>> get dropdownItems {
     List<DropdownMenuItem<String>> menuItems = [
-
-      DropdownMenuItem(child: Text("M"),value: "M"),
-      DropdownMenuItem(child: Text("F"),value: "F"),
+      DropdownMenuItem(child: Text("M"), value: "M"),
+      DropdownMenuItem(child: Text("F"), value: "F"),
     ];
     return menuItems;
   }
@@ -69,10 +68,9 @@ class _AddPlanningFormState extends State<AddPlanningForm> {
       lbButton = "Alterar";
       _asyncFindRegister();
     }
-    _rebanho= FirebaseFirestore.instance.collection("rebanho").snapshots();
+    _rebanho = FirebaseFirestore.instance.collection("rebanho").snapshots();
     user = widget.user;
     super.initState();
-
   }
 
   void cleanForm(bool r) {
@@ -113,29 +111,35 @@ class _AddPlanningFormState extends State<AddPlanningForm> {
   _asyncFindRegister() async {
     identification = DatabasePlanning.find(_docEdit!);
     identification.then((value) => {
-      descriptionController.text = value.description.toString(),
-      dateBeginController.text = value.dateBegin.toString(),
-      dateEndController.text = value.dateEnd.toString(),
-      idFlockController.text = value.idFlock.toString(),
-      procedureController.text = value.procedure.toString(),
-      setState(() {
-        isChecked = value.status!;
-        if (isChecked) {
-          statusController.text = "true";
-          print('ligado');
-        } else {
-          statusController.text = "false";
-          print('desligado');
-        }
-      })
-    });
+          descriptionController.text = value.description.toString(),
+          dateBeginController.text = value.dateBegin.toString(),
+          dateEndController.text = value.dateEnd.toString(),
+          idFlockController.text = value.idFlock.toString(),
+          procedureController.text = value.procedure.toString(),
+          setState(() {
+            isChecked = value.status!;
+            if (isChecked) {
+              statusController.text = "true";
+              print('ligado');
+            } else {
+              statusController.text = "false";
+              print('desligado');
+            }
+          })
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${title}'),
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
+        ),
+        title: Text(
+          '${title}',
+          style: TextStyle(color: Color(0xffffffff)),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -150,6 +154,7 @@ class _AddPlanningFormState extends State<AddPlanningForm> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
+                  color: Colors.black54,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -196,7 +201,6 @@ class _AddPlanningFormState extends State<AddPlanningForm> {
               const SizedBox(
                 height: 30,
               ),
-
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -225,40 +229,39 @@ class _AddPlanningFormState extends State<AddPlanningForm> {
               const SizedBox(
                 height: 30,
               ),
-
               Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
                   StreamBuilder<QuerySnapshot>(
-                  stream: _rebanho,
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot>snapshot) {
-                  return DropdownButton(
+                      stream: _rebanho,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        return DropdownButton(
                           value: rebanho,
                           icon: const Icon(Icons.keyboard_arrow_down),
-                          hint: const Text("Rebanho"),
+                          hint: const Text("Selecione o Rebanho"),
                           items: snapshot.data?.docs.map((doc) {
-                          return DropdownMenuItem(
-                                  value: doc.id,
-                                  child: Text(doc['description']),
-                                  );
-                                  }).toList(),
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                        rebanho = value!;
-                                        print(value);
-                                        idFlockController.text = value!;
-                                    },
-                                  );
+                            return DropdownMenuItem(
+                              value: doc.id,
+                              child: Text(doc['description']),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(
+                              () {
+                                rebanho = value!;
+                                print(value);
+                                idFlockController.text = value!;
+                              },
+                            );
                           },
-                          );
-                  }),
-                  ],
-                  ),
-
+                        );
+                      }),
+                ],
+              ),
               const SizedBox(
                 height: 30,
               ),
-
               TextField(
                 controller: procedureController,
                 keyboardType: TextInputType.text,
@@ -271,7 +274,6 @@ class _AddPlanningFormState extends State<AddPlanningForm> {
               const SizedBox(
                 height: 30,
               ),
-
               Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                 Text('Situação do planejamento (Ativo/Inativo)',
                     textAlign: TextAlign.left),
@@ -308,38 +310,37 @@ class _AddPlanningFormState extends State<AddPlanningForm> {
                       animationDuration: Duration(seconds: 3),
                     ).show(context);
                   } else {
-                    if(idFlockController.text == ""){
+                    if (idFlockController.text == "") {
                       print('Erro');
-                    }else{var s = await DatabasePlanning.addItem(
-                      description: descriptionController.text,
-                      dateBegin: dateBeginController.text,
-                      dateEnd: dateEndController.text,
-                      idFlock: idFlockController.text,
-                      procedure: procedureController.text,
-                      status: isChecked,
-                    );
-                    if (s == 'done') {
-                      msg = "Dados registrado com sucesso!";
-                      corToast = Colors.green;
-                      iconToast = Icons.update;
-                      cleanForm(false);
                     } else {
-                      msg = "Não foi possivel registrar os dados";
-                      iconToast = Icons.error;
-                      corToast = Colors.redAccent[400];
+                      var s = await DatabasePlanning.addItem(
+                        description: descriptionController.text,
+                        dateBegin: dateBeginController.text,
+                        dateEnd: dateEndController.text,
+                        idFlock: idFlockController.text,
+                        procedure: procedureController.text,
+                        status: isChecked,
+                      );
+                      if (s == 'done') {
+                        msg = "Dados registrado com sucesso!";
+                        corToast = Colors.green;
+                        iconToast = Icons.update;
+                        cleanForm(false);
+                      } else {
+                        msg = "Não foi possivel registrar os dados";
+                        iconToast = Icons.error;
+                        corToast = Colors.redAccent[400];
+                      }
+                      // ignore: use_build_context_synchronously
+                      MotionToast(
+                        color: corToast!,
+                        description: "${msg}",
+                        icon: iconToast,
+                        enableAnimation: false,
+                        animationDuration: Duration(seconds: 3),
+                      ).show(context);
                     }
-                    // ignore: use_build_context_synchronously
-                    MotionToast(
-                      color: corToast!,
-                      description: "${msg}",
-                      icon: iconToast,
-                      enableAnimation: false,
-                      animationDuration: Duration(seconds: 3),
-                    ).show(context);
-                    }
-                    }
-
-
+                  }
                 },
                 child: Text('${lbButton}'),
                 color: Colors.blueGrey,
@@ -385,6 +386,4 @@ class _AddPlanningFormState extends State<AddPlanningForm> {
       },
     );
   }
-
-
 }

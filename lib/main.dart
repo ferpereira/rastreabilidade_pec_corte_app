@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rastreabilidade_pec_corte_app/screens/splash_screen/splash_rpc.dart';
 import 'screens/Login/login_page.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import '';
 
 void main() {
   runApp(MyApp());
@@ -42,7 +44,7 @@ class MyApp extends StatelessWidget {
           bodyText1: TextStyle(fontSize: 18.0),
         ),
       ),
-      home: LoginPage(),
+      home: Splash_RPC(),
     );
   }
 }

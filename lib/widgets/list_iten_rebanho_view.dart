@@ -26,7 +26,7 @@ class List_iten_rebanho_view extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ListTile(
-                  leading: Icon(Icons.album, color: Colors.yellow,),
+                  leading: Icon(Icons.sort, color: Colors.yellow,),
                   title: Text('Identificação do rebanho:'),
                   subtitle: Text('${doc['description']} Fazenda: ${doc['farm']}'),
                 ),

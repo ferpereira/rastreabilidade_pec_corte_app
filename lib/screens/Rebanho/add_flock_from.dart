@@ -9,7 +9,8 @@ import '../../model/rebanho.dart';
 class AddFlockForm extends StatefulWidget {
   final String? doc;
   final User user;
-  const AddFlockForm({Key? key, this.doc, required this.user}) : super(key: key);
+  const AddFlockForm({Key? key, this.doc, required this.user})
+      : super(key: key);
 
   @override
   State<AddFlockForm> createState() => _AddFlockFormState();
@@ -55,18 +56,17 @@ class _AddFlockFormState extends State<AddFlockForm> {
     super.initState();
   }
 
-void cleanForm(bool r){
+  void cleanForm(bool r) {
     descriptionController.text = "";
     maximumAmountController.text = "";
     farmController.text = "";
     herdDateController.text = "";
     statusController.text = "";
 
-    if(r){
+    if (r) {
       _docEdit = "";
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => ListFlock(user: user)));
+          MaterialPageRoute(builder: (context) => ListFlock(user: user)));
     }
   }
 
@@ -81,7 +81,7 @@ void cleanForm(bool r){
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-          herdDateController.text = selectedDate.toString();
+        herdDateController.text = selectedDate.toString();
       });
     }
   }
@@ -89,29 +89,34 @@ void cleanForm(bool r){
   _asyncFindRegister() async {
     identification = DatabaseFlock.find(_docEdit!);
     identification.then((value) => {
-      descriptionController.text = value.description.toString(),
-      maximumAmountController.text = value.maximumAmount.toString(),
-      farmController.text = value.farm.toString(),
-      herdDateController.text = value.herdDate.toString(),
-      setState(() {
-        isChecked = value.status!;
-        if(isChecked){
-          statusController.text = "true";
-          print('ligado');
-        }else{
-          statusController.text = "false";
-          print('desligado');
-        }
-      })
-
-    });
+          descriptionController.text = value.description.toString(),
+          maximumAmountController.text = value.maximumAmount.toString(),
+          farmController.text = value.farm.toString(),
+          herdDateController.text = value.herdDate.toString(),
+          setState(() {
+            isChecked = value.status!;
+            if (isChecked) {
+              statusController.text = "true";
+              print('ligado');
+            } else {
+              statusController.text = "false";
+              print('desligado');
+            }
+          })
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${title}'),
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
+        ),
+        title: Text(
+          '${title}',
+          style: TextStyle(color: Color(0xffffffff)),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -126,6 +131,7 @@ void cleanForm(bool r){
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
+                  color: Colors.black54,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -168,7 +174,9 @@ void cleanForm(bool r){
                       labelText: 'Data criação do Rebanho',
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   MaterialButton(
                     onPressed: () => _selectDate(context, "nasc"),
                     child: Text('Selecione a data'),
@@ -177,7 +185,6 @@ void cleanForm(bool r){
                     minWidth: 200,
                     height: 40,
                   ),
-
                 ],
               ),
               const SizedBox(
@@ -195,27 +202,28 @@ void cleanForm(bool r){
               const SizedBox(
                 height: 30,
               ),
-
-              Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text('Situação do rebanho (Ativo/Inativo)', textAlign: TextAlign.left),
-                    _MyStatefulWidgetState(context),
-                  ]),
+              Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                Text('Situação do rebanho (Ativo/Inativo)',
+                    textAlign: TextAlign.left),
+                _MyStatefulWidgetState(context),
+              ]),
               MaterialButton(
                 onPressed: () async {
                   if (_findRegister) {
-                    var s = await DatabaseFlock.updateItem(id: _docEdit!, description: descriptionController.text,
+                    var s = await DatabaseFlock.updateItem(
+                      id: _docEdit!,
+                      description: descriptionController.text,
                       maximumAmount: maximumAmountController.text,
                       farm: farmController.text,
                       herdDate: herdDateController.text,
-                      status: isChecked,);
-                    if(s == 'done'){
+                      status: isChecked,
+                    );
+                    if (s == 'done') {
                       msg = "Dados alterado com sucesso!";
                       corToast = Colors.green;
                       iconToast = Icons.update;
                       cleanForm(true);
-                    }else{
+                    } else {
                       msg = "Não foi possivel alterar os dados";
                       iconToast = Icons.error;
                       corToast = Colors.redAccent[400];
@@ -228,14 +236,14 @@ void cleanForm(bool r){
                       enableAnimation: false,
                       animationDuration: Duration(seconds: 3),
                     ).show(context);
-
                   } else {
                     await DatabaseFlock.addItem(
                       description: descriptionController.text,
                       maximumAmount: maximumAmountController.text,
                       farm: farmController.text,
                       herdDate: herdDateController.text,
-                      status: isChecked,);
+                      status: isChecked,
+                    );
                   }
                 },
                 child: Text('${lbButton}'),
@@ -272,9 +280,9 @@ void cleanForm(bool r){
       onChanged: (bool? value) {
         setState(() {
           isChecked = value!;
-          if(isChecked){
+          if (isChecked) {
             statusController.text = "true";
-          }else{
+          } else {
             statusController.text = "false";
             isChecked = false;
           }
@@ -282,9 +290,4 @@ void cleanForm(bool r){
       },
     );
   }
-
-
-
 }
-
-

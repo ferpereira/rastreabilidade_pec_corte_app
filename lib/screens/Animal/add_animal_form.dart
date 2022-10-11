@@ -6,7 +6,7 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Animal/listAnimal.dart';
 import 'package:rastreabilidade_pec_corte_app/utils/validator.dart';
 
-import '../../db/database.dart';
+import '../../db/database_animal.dart';
 import '../../model/animal.dart';
 
 class AddAnimalForm extends StatefulWidget {
@@ -51,12 +51,14 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
   IconData iconToast = Icons.error;
   late User user;
   String? selectedValue = null;
+  Stream<QuerySnapshot>? _rebanho;
+  String? rebanho;
 
-  List<DropdownMenuItem<String>> get dropdownItems{
+  List<DropdownMenuItem<String>> get dropdownItems {
     List<DropdownMenuItem<String>> menuItems = [
       DropdownMenuItem(child: Text("Selecione sexo:"),value: ""),
-      DropdownMenuItem(child: Text("M"),value: "M"),
-      DropdownMenuItem(child: Text("F"),value: "F"),
+      DropdownMenuItem(child: Text("M"), value: "M"),
+      DropdownMenuItem(child: Text("F"), value: "F"),
     ];
     return menuItems;
   }
@@ -71,9 +73,9 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
       lbButton = "Alterar";
       _asyncFindRegister();
     }
+    _rebanho = FirebaseFirestore.instance.collection("rebanho").snapshots();
     user = widget.user;
     super.initState();
-
   }
 
   void cleanForm(bool r) {
@@ -86,7 +88,7 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
     sexController.text = "";
     slaughterRecordController.text = "";
     statusController.text = "";
-
+    selectedValue = "";
     if (r) {
       _docEdit = "";
       Navigator.of(context).pushReplacement(
@@ -143,7 +145,13 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${title}'),
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
+        ),
+        title: Text(
+          '${title}',
+          style: TextStyle(color: Color(0xffffffff)),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -158,6 +166,7 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
+                  color: Colors.black54,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -216,14 +225,35 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
               const SizedBox(
                 height: 30,
               ),
-              TextField(
-                controller: flockController,
-                keyboardType: TextInputType.text,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Rebanho',
-                  hintText: 'Informe o rebanho',
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  StreamBuilder<QuerySnapshot>(
+                      stream: _rebanho,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        return DropdownButton(
+                          value: rebanho,
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          hint: const Text("Selecione o Rebanho"),
+                          items: snapshot.data?.docs.map((doc) {
+                            return DropdownMenuItem(
+                              value: doc.id,
+                              child: Text(doc['description']),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(
+                              () {
+                                rebanho = value!;
+                                print(value);
+                                flockController.text = value!;
+                              },
+                            );
+                          },
+                        );
+                      }),
+                ],
               ),
               const SizedBox(
                 height: 30,
@@ -252,11 +282,7 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
               const SizedBox(
                 height: 30,
               ),
-
-
-          Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 DropdownButtonFormField(
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -270,6 +296,7 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                       filled: true,
                       fillColor: Colors.white,
                     ),
+                    hint: Text("Selecione o Sexo do Animal"),
                     dropdownColor: Colors.white,
                     value: selectedValue,
                     onChanged: (String? newValue) {
@@ -279,36 +306,10 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
                       });
                     },
                     items: dropdownItems),
-              ]
-          ),
+              ]),
               const SizedBox(
                 height: 30,
               ),
-
-/* DropdownButton<String>(
-                value: dropdownValue,
-                  icon: const Icon(Icons.arrow_back_rounded),
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 3,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      dropdownValue = value!;
-                    });
-                  },
-                  items: items.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-          ),
-              const SizedBox(
-                height: 30,
-              ), */
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -451,6 +452,4 @@ class _AddAnimalFormState extends State<AddAnimalForm> {
       },
     );
   }
-
-
 }

@@ -5,7 +5,7 @@ import 'package:rastreabilidade_pec_corte_app/screens/Login/login_page.dart';
 import 'package:rastreabilidade_pec_corte_app/utils/fire_auth.dart';
 import 'package:rastreabilidade_pec_corte_app/screens/Animal/add_animal_form.dart';
 
-import '../db/database.dart';
+import '../db/database_animal.dart';
 import '../widgets/buttonHome.dart';
 
 class HomePage extends StatefulWidget {

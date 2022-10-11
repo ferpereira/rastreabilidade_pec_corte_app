@@ -8,7 +8,8 @@ import 'package:rastreabilidade_pec_corte_app/screens/Vacinas/list_vaccine.dart'
 class AddVaccineForm extends StatefulWidget {
   final String? doc;
   final User user;
-  const AddVaccineForm({Key? key, this.doc, required this.user}) : super(key: key);
+  const AddVaccineForm({Key? key, this.doc, required this.user})
+      : super(key: key);
 
   @override
   State<AddVaccineForm> createState() => _AddVaccineFormState();
@@ -53,18 +54,17 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
     super.initState();
   }
 
-  void cleanForm(bool r){
+  void cleanForm(bool r) {
     descriptionController.text = "";
     dateFabricationController.text = "";
     dateValidityController.text = "";
     laboratoryController.text = "";
     statusController.text = "";
 
-    if(r){
+    if (r) {
       _docEdit = "";
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => ListVaccine(user: user)));
+          MaterialPageRoute(builder: (context) => ListVaccine(user: user)));
     }
   }
 
@@ -79,9 +79,9 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        if(action == "fabr"){
+        if (action == "fabr") {
           dateFabricationController.text = selectedDate.toString();
-        }else{
+        } else {
           dateValidityController.text = selectedDate.toString();
         }
       });
@@ -97,29 +97,34 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
   _asyncFindRegister() async {
     identification = DatabaseVaccine.find(_docEdit!);
     identification.then((value) => {
-      descriptionController.text = value.description.toString(),
-      dateFabricationController.text = value.dateFabrication.toString(),
-      dateValidityController.text = value.dateValidity.toString(),
-      laboratoryController.text = value.laboratory.toString(),
-      setState(() {
-        isChecked = value.status!;
-        if(isChecked){
-          statusController.text = "true";
-          print('ligado');
-        }else{
-          statusController.text = "false";
-          print('desligado');
-        }
-      })
-
-    });
+          descriptionController.text = value.description.toString(),
+          dateFabricationController.text = value.dateFabrication.toString(),
+          dateValidityController.text = value.dateValidity.toString(),
+          laboratoryController.text = value.laboratory.toString(),
+          setState(() {
+            isChecked = value.status!;
+            if (isChecked) {
+              statusController.text = "true";
+              print('ligado');
+            } else {
+              statusController.text = "false";
+              print('desligado');
+            }
+          })
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${title}'),
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
+        ),
+        title: Text(
+          '${title}',
+          style: TextStyle(color: Color(0xffffffff)),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -134,6 +139,7 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
+                  color: Colors.black54,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -164,7 +170,9 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
                       labelText: 'Data fabricação da vacina',
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   MaterialButton(
                     onPressed: () => _selectDate(context, "fabr"),
                     child: Text('Selecione a data'),
@@ -173,7 +181,6 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
                     minWidth: 200,
                     height: 40,
                   ),
-
                 ],
               ),
               const SizedBox(
@@ -191,7 +198,9 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
                       labelText: 'Data validade da vacina',
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   MaterialButton(
                     onPressed: () => _selectDate(context, ""),
                     child: Text('Selecione a data'),
@@ -200,13 +209,11 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
                     minWidth: 200,
                     height: 40,
                   ),
-
                 ],
               ),
               const SizedBox(
                 height: 30,
               ),
-
               TextField(
                 controller: laboratoryController,
                 keyboardType: TextInputType.text,
@@ -219,26 +226,28 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
               const SizedBox(
                 height: 30,
               ),
-              Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text('Situação da vacina (Ativo/Inativo)', textAlign: TextAlign.left),
-                    _MyStatefulWidgetState(context),
-                  ]),
+              Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                Text('Situação da vacina (Ativo/Inativo)',
+                    textAlign: TextAlign.left),
+                _MyStatefulWidgetState(context),
+              ]),
               MaterialButton(
                 onPressed: () async {
                   if (_findRegister) {
-                    var s = await DatabaseVaccine.updateItem(id: _docEdit!, description: descriptionController.text,
+                    var s = await DatabaseVaccine.updateItem(
+                      id: _docEdit!,
+                      description: descriptionController.text,
                       dateFabrication: dateFabricationController.text,
                       dateValidity: dateValidityController.text,
                       laboratory: laboratoryController.text,
-                      status: isChecked,);
-                    if(s == 'done'){
+                      status: isChecked,
+                    );
+                    if (s == 'done') {
                       msg = "Dados alterado com sucesso!";
                       corToast = Colors.green;
                       iconToast = Icons.update;
                       cleanForm(true);
-                    }else{
+                    } else {
                       msg = "Não foi possivel alterar os dados";
                       iconToast = Icons.error;
                       corToast = Colors.redAccent[400];
@@ -251,20 +260,21 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
                       enableAnimation: false,
                       animationDuration: Duration(seconds: 3),
                     ).show(context);
-
                   } else {
-                    var s = await DatabaseVaccine.addItem(description: descriptionController.text,
+                    var s = await DatabaseVaccine.addItem(
+                      description: descriptionController.text,
                       dateFabrication: dateFabricationController.text,
                       dateValidity: dateValidityController.text,
                       laboratory: laboratoryController.text,
-                      status: isChecked,);
+                      status: isChecked,
+                    );
 
-                    if(s == 'done'){
+                    if (s == 'done') {
                       msg = "Dados registrado com sucesso!";
                       corToast = Colors.green;
                       iconToast = Icons.update;
                       cleanForm(false);
-                    }else{
+                    } else {
                       msg = "Não foi possivel registrar os dados";
                       iconToast = Icons.error;
                       corToast = Colors.redAccent[400];
@@ -313,9 +323,9 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
       onChanged: (bool? value) {
         setState(() {
           isChecked = value!;
-          if(isChecked){
+          if (isChecked) {
             statusController.text = "true";
-          }else{
+          } else {
             statusController.text = "false";
             isChecked = false;
           }
@@ -323,9 +333,4 @@ class _AddVaccineFormState extends State<AddVaccineForm> {
       },
     );
   }
-
-
-
 }
-
-

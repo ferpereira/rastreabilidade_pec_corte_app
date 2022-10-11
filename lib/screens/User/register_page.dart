@@ -38,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           title: Text(
             'Novo usuário',
-            style: TextStyle(color: Color(0xffffffff)),
+            style: TextStyle(color: Colors.black54),
           ),
         ),
         body: Padding(

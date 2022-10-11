@@ -9,17 +9,16 @@ final CollectionReference _mainCollection = _firestore.collection('animal');
 class Database {
   static String? userUid;
 
-  static Future<String> addItem({
-    required String description,
-    required String sisbovEarring,
-    required String birthDate,
-    required String flock,
-    required String breed,
-    required String leatherColor,
-    required String sex,
-    required String slaughterRecord,
-    bool? status
-  }) async {
+  static Future<String> addItem(
+      {required String description,
+      required String sisbovEarring,
+      required String birthDate,
+      required String flock,
+      required String breed,
+      required String leatherColor,
+      required String sex,
+      required String slaughterRecord,
+      bool? status}) async {
     DocumentReference documentReferencer = _mainCollection.doc(userUid);
 
     Map<String, dynamic> data = <String, dynamic>{
@@ -31,7 +30,7 @@ class Database {
       'leatherColor': leatherColor,
       'sex': sex,
       'slaughterRecord': slaughterRecord,
-      'status':status,
+      'status': status,
     };
 
     var value = await documentReferencer
@@ -41,18 +40,17 @@ class Database {
     return Future.value('done');
   }
 
-  static Future<String> updateItem({
-    required String id,
-    required String description,
-    required String sisbovEarring,
-    required String birthDate,
-    required String flock,
-    required String breed,
-    required String leatherColor,
-    required String sex,
-    required String slaughterRecord,
-    bool? status
-  }) async {
+  static Future<String> updateItem(
+      {required String id,
+      required String description,
+      required String sisbovEarring,
+      required String birthDate,
+      required String flock,
+      required String breed,
+      required String leatherColor,
+      required String sex,
+      required String slaughterRecord,
+      bool? status}) async {
     DocumentReference documentReferencer = _mainCollection.doc(id);
 
     Map<String, dynamic> data = <String, dynamic>{
@@ -64,15 +62,14 @@ class Database {
       'leatherColor': leatherColor,
       'sex': sex,
       'slaughterRecord': slaughterRecord,
-      'status':status,
+      'status': status,
     };
     var value = await documentReferencer
-          .update(data)
-          .whenComplete(() => print('Dados alterados com sucesso!!'))
-          .catchError((e) => print(e));
+        .update(data)
+        .whenComplete(() => print('Dados alterados com sucesso!!'))
+        .catchError((e) => print(e));
 
     return Future.value('done');
-
   }
 
   static readItemsN() {
@@ -119,7 +116,8 @@ class Database {
         await _firestore.collection('animal').get().then((value) => value);
     var result = querySnapshot.docs.where((element) => element.id == id);
     result.first.data();
-    Animal retorn = Animal(result.first.id,
+    Animal retorn = Animal(
+        result.first.id,
         result.first['description'],
         result.first['sisbovEarring'],
         result.first['birthDate'],
@@ -131,5 +129,4 @@ class Database {
         result.first["status"]);
     return retorn;
   }
-
 }

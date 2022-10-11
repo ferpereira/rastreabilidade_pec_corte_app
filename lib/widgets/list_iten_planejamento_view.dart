@@ -27,7 +27,7 @@ class List_iten_panejamento_view extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ListTile(
-                  leading: Icon(Icons.album, color: Colors.yellow,),
+                  leading: Icon(Icons.room_preferences, color: Colors.yellow,),
                   title: Text('Planejamento:'),
                   subtitle: Text('${doc['description']} ;- Procedimento: ${doc['procedure']}'),
                 ),
